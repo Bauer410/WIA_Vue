@@ -47,31 +47,12 @@ export default {
     handleSubmit(event) {
         // Meteor.call('users.register', this.username, this.password);
 
-
-
         const regSucess = Accounts.createUser({
           username: this.username,
           password: this.password
         });
 
-
         console.log(regSucess);
-
-//         Meteor.call('postForm', newUser, function(error, response) {
-//     if (error) {
-//         console.log('postForm: Error: ', error);
-//     }
-//     if (response) {
-//         console.log('postForm: Response: ', response);
-//     }
-// });
-
-        // const regSucess = Accounts.createUser(this.username, this.password);
-        // console.log(regSucess);
-
-        // const test = Accounts.createUser(this.username, this.password);
-        // console.log("test");
-      // Meteor.loginWithPassword(this.username, this.password);
     }
   },
 }

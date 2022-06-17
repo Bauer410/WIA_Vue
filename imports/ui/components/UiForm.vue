@@ -13,7 +13,7 @@
         </div>
 
 
-        <h5> Game Test: {{gameTest}} </h5>
+        <h5> Game Test: {{ myGames }} </h5>
         <h5> Game Test: {{ inGameCheck() }} </h5>
 
 
@@ -24,6 +24,12 @@
                 <button type="button"id="Schere" @click="scissorClicked">Scissor</button>
             </div>
         </div>
+
+        <div>
+            <p></p>
+            <button type="button" id="reset-btn" @click="resetButtonClicked">Clear game</button>
+        </div>
+
     </div>
 
 </template>
@@ -46,8 +52,6 @@ export default {
   },
   methods: {
     inGameCheck() {
-            console.log(Session.get("inGame"));
-
             let inGame = Session.get("inGame");
             if (typeof inGame === "undefined") {
                 return false;
@@ -75,7 +79,6 @@ export default {
         }
     },
     rockClicked(event) {
-        console.log(event);
         Meteor.call("games.makeMove", event.target.id);
     },
     paperClicked(event) {
@@ -85,19 +88,23 @@ export default {
         Meteor.call("games.makeMove", event.target.id);
     },
     playButtonClicked() {
-        console.log("Clicked button");
         Session.set("inGame", true);
         Meteor.call("games.play");
-        Meteor.subscribe('MyGame');
+        Meteor.subscribe("myGames");
+    },
+    resetButtonClicked() {
+        console.log("Reset button clicked");
+        Meteor.call("games.resetRound");
     },
   },
     meteor: {
     $subscribe: {
-      'games': []
+      // Subscribes to the 'myGames' publication with no parameters
+      myGames: []
     },
-    gameTest() {
-      return Games.find({});
-    }
+    myGames() {
+      return Games.find({}).fetch();
+    },
 }
 }
 </script>
