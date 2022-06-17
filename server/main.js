@@ -59,3 +59,7 @@ Meteor.publish('MyGame', function myGamePublication() {
 		]
 	})
 });
+
+Meteor.publish('Games2', function publishGames() {
+  return Games.find();
+});

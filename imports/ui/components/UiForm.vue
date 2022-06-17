@@ -2,13 +2,20 @@
     <div id="ui">
         <h2>Hallo</h2>
 
-<!--         {{#if inGame}}
+        <div v-if=" inGameCheck() ">
+          Now you see me
             <p id="status">
-                Status: {{status}}
+                Status: {{ status() }}
             </p>
-        {{else}} -->
-            <button type="button" id="play-btn" @click="playButtonClicked">Play</button>
-        <!-- {{/if}} -->
+        </div>
+        <div v-else>
+          <button type="button" id="play-btn" @click="playButtonClicked">Play</button>
+        </div>
+
+
+        <h5> Game Test: {{gameTest}} </h5>
+        <h5> Game Test: {{ inGameCheck() }} </h5>
+
 
         <div>
             <div class="selectableField">
@@ -25,57 +32,72 @@
 <script>
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
+import { Session } from 'meteor/session';
+import { Games } from "/lib/games";
+
 export default {
   name: "UiForm",
   data() {
     return {
       username: "",
-      password: ""
+      password: "",
+      inGame: false
     };
   },
   methods: {
-    rockClicked() {
-        alert("rockClicked");
+    inGameCheck() {
+            console.log(Session.get("inGame"));
+
+            let inGame = Session.get("inGame");
+            if (typeof inGame === "undefined") {
+                return false;
+            }
+            return Session.get("inGame");
     },
-    paperClicked() {
-        alert("paperClicked");
+    status() {
+        if(Session.get("inGame")) {
+            let myGame = Games.findOne();
+
+            if(myGame.status === "waiting")
+                return "Looking for an opponent...";
+            else if(myGame.status === Meteor.userId())
+                return "Your turn";
+            else if(myGame.status !== Meteor.userId() && myGame.status !== "end")
+                return "opponent's turn";
+            else if(myGame.result === Meteor.userId())
+                return "You won!";
+            else if(myGame.status === "end" && myGame.result !== Meteor.userId() && myGame.result !== "tie")
+                return "You lost!";
+            else if(myGame.result === "tie")
+                return "It's a tie";
+            else
+                return "";
+        }
     },
-    scissorClicked() {
-        alert("scissorClicked");
+    rockClicked(event) {
+        console.log(event);
+        Meteor.call("games.makeMove", event.target.id);
+    },
+    paperClicked(event) {
+        Meteor.call("games.makeMove", event.target.id);
+    },
+    scissorClicked(event) {
+        Meteor.call("games.makeMove", event.target.id);
     },
     playButtonClicked() {
-        Meteor.call('games.play');
+        console.log("Clicked button");
+        Session.set("inGame", true);
+        Meteor.call("games.play");
+        Meteor.subscribe('MyGame');
     },
-
-    handleSubmit(event) {
-        // Meteor.call('users.register', this.username, this.password);
-
-
-
-        const regSucess = Accounts.createUser({
-          username: this.username,
-          password: this.password
-        });
-
-
-        console.log(regSucess);
-
-//         Meteor.call('postForm', newUser, function(error, response) {
-//     if (error) {
-//         console.log('postForm: Error: ', error);
-//     }
-//     if (response) {
-//         console.log('postForm: Response: ', response);
-//     }
-// });
-
-        // const regSucess = Accounts.createUser(this.username, this.password);
-        // console.log(regSucess);
-
-        // const test = Accounts.createUser(this.username, this.password);
-        // console.log("test");
-      // Meteor.loginWithPassword(this.username, this.password);
-    }
   },
+    meteor: {
+    $subscribe: {
+      'games': []
+    },
+    gameTest() {
+      return Games.find({});
+    }
+}
 }
 </script>

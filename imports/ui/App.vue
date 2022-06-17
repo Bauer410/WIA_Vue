@@ -22,6 +22,7 @@
               v-model="hideCompleted"
               @click="toggleHideCompleted"
           >
+
             <span v-if="hideCompleted">Show All</span>
             <span v-else>Hide Completed Tasks</span>
           </button>
