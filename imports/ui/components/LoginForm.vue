@@ -1,8 +1,8 @@
 <template>
   <form class="login-form" @submit.prevent="handleSubmit">
     <div>
-      <h2>Login with an existing Player</h2>
-      <label for="username">Username</label>
+      <h2>Login</h2>
+      <label for="username">Nutzername</label>
       <input
           id="username"
           name="username"
@@ -14,7 +14,7 @@
     </div>
 
     <div>
-      <label for="password">Password</label>
+      <label for="password">Passwort</label>
       <input
           id="password"
           name="password"
@@ -24,9 +24,8 @@
           v-model="password"
       />
     </div>
-
     <div>
-      <b-button type="submit">Log In</b-button>
+      <b-button type="submit">Einloggen</b-button>
     </div>
   </form>
 </template>

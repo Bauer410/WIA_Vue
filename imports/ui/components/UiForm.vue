@@ -1,56 +1,50 @@
 <template>
     <div id="ui">
-      <b-container fluid>
-        <b-row>
-          <b-col>
-            <p v-if="isInGame()">
+      <b-container>
 
-              Status: {{ getStatus() }}
-              ResultMessage: {{ getResultMessage() }}
-            </p>
-            <b-button v-else type="button" id="play-btn" @click="playButtonClicked">Play</b-button>
-          </b-col>
-          <b-col />
-          <b-col />
-        </b-row>
-        <b-row>
-          <b-col>
-            <h5> Game Test: {{ myGames }} </h5>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col>
-            <h5> Game Test: {{ isInGame() }} </h5>
-          </b-col>
+        <!-- Game Status -->
+        <b-row class="text-center mt-4">
+            <h1 v-if="isInGame()">
+              {{ getStatusText() }}
+            </h1>
+
+            <!-- Start Game Button -->
+             <b-container v-else>
+              <h1>Willkommen zu SSPES!</h1>
+              <b-button size="lg" type="button" class="mt-4" variant="success" id="play-btn" @click="playButtonClicked">Join Game</b-button>
+             </b-container>
         </b-row>
 
-        <div v-if="isInGame()">
-          <b-row>
-            <b-col>
-              <b-button type="button" id="Stein" @click="actionClicked">Stein</b-button>
-            </b-col>
-            <b-col>
-              <b-button type="button" id="Papier" @click="actionClicked">Papier</b-button>
-            </b-col>
-            <b-col>
-              <b-button type="button" id="Schere" @click="actionClicked">Schere</b-button>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <b-button type="button" id="Echse" @click="actionClicked">Echse</b-button>
-            </b-col>
-            <b-col>
-              <b-button type="button" id="Spock" @click="actionClicked">Spock</b-button>
-            </b-col>
-          </b-row>
+        <!-- Loading Spinner -->
+        <div class="text-center" v-if = "getStatus() === 'waiting'">
+          <b-spinner variant="success" type="grow"></b-spinner>
         </div>
 
-        <b-row v-if="finish">
-          <b-col>
-            <b-button type="button" id="reset-btn" @click="resetButtonClicked">Clear game</b-button>
-          </b-col>
-        </b-row>
+        <!-- Action Buttons -->
+        <!-- TODO: show only when getStatus() === Meteor.userID()-->
+        <b-container v-if="isInGame()">
+          <b-row class="text-center" align-v="center">
+            <b-button-group size="lg" class="mt-4">
+              <b-button type="button" id="Stein" @click="actionClicked">🪨</b-button>
+              <b-button type="button" id="Papier" @click="actionClicked">📄</b-button>
+              <b-button type="button" id="Schere" @click="actionClicked">✂️</b-button>
+              <b-button type="button" id="Echse" @click="actionClicked">🦎</b-button>
+              <b-button type="button" id="Spock" @click="actionClicked">🖖🏻</b-button>
+            </b-button-group>
+          </b-row>
+        </b-container>
+
+        <!-- Restart Button -->
+        <b-container v-if="finish" class="m-4">
+          <b-row>
+              <b-button type="button" variant="success" id="reset-btn" @click="resetButtonClicked">Neu starten!</b-button>
+          </b-row>
+        </b-container>
+
+        <!-- Game Data -->
+        <div style="position: absolute; bottom: 5px;">
+          <p> Game Data: {{ myGames }} </p>
+        </div>
       </b-container>
     </div>
 </template>
@@ -188,16 +182,24 @@ export default {
         return resultMessage
       }
     },
+
+     getStatus() {
+        if (Session.get("inGame")) {
+          let myGame = Games.findOne();
+          return myGame.status
+        }
+      },
+
     /**
      * Returns the current status of the game
      * @returns {string} The status of the game
      */
-    getStatus() {
+    getStatusText() {
         if (Session.get("inGame")) {
             let myGame = Games.findOne();
 
             if(myGame.status === "waiting") {
-              this.status = "Suche nach Gegner....";
+              this.status = "Warten auf Gegner....";
             }
             else if(myGame.status === Meteor.userId()) {
               this.status = "Du bist am Zug!";
