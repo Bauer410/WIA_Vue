@@ -26,7 +26,7 @@
     </div>
 
     <div>
-      <button type="submit">Log In</button>
+      <b-button type="submit">Log In</b-button>
     </div>
   </form>
 </template>

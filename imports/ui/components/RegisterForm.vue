@@ -26,7 +26,7 @@
     </div>
 
     <div>
-      <button type="submit">Register</button>
+      <b-button type="submit">Register</b-button>
     </div>
     </form>
 </template>
