@@ -12,6 +12,7 @@
              <b-container v-else>
               <h1>Willkommen zu SSPES!</h1>
               <b-button size="lg" type="button" class="mt-4" variant="success" id="play-btn" @click="playButtonClicked">Join Game</b-button>
+              <b-button size="lg" type="button" class="mt-4" variant="danger" id="delete-btn" @click="deleteButtonClicked">Reset Game</b-button>
              </b-container>
         </b-row>
 
@@ -46,7 +47,7 @@
 
         <!-- Game Data -->
         <div style="position: absolute; bottom: 5px;">
-          <p> Game Data: {{ myGames }} </p>
+          <p> {{ myGames.staus }} </p>
         </div>
       </b-container>
     </div>
@@ -236,6 +237,9 @@ export default {
         Session.set("inGame", true);
         Meteor.call("games.play");
         Meteor.subscribe("myGames");
+    },
+    deleteButtonClicked() {
+        Meteor.call("games.delete");
     },
     resetButtonClicked() {
         this.finish = false;
