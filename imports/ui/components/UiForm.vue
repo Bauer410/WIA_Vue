@@ -21,7 +21,7 @@
         </div>
 
         <!-- Action Buttons -->
-        <!-- TODO: show only when getStatus() === Meteor.userID()-->
+        <!-- TODO: show only when getStatus() === Meteor.userID() -->
         <b-container v-if="isInGame()">
           <b-row class="text-center" align-v="center">
             <b-button-group size="lg" class="mt-4">
@@ -36,6 +36,9 @@
 
         <!-- Restart Button -->
         <b-container v-if="finish" class="m-4">
+          <b-row>
+            <h6>{{ getResultMessage() }}</h6>
+          </b-row>
           <b-row>
               <b-button type="button" variant="success" id="reset-btn" @click="resetButtonClicked">Neu starten!</b-button>
           </b-row>
